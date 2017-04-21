@@ -6,6 +6,8 @@ import org.jnetpcap.packet.JPacket;
 import org.jnetpcap.packet.JPacketHandler;
 import org.jnetpcap.protocol.tcpip.Http;
 import org.jnetpcap.protocol.tcpip.Tcp;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,18 +16,19 @@ import java.util.List;
  * Created by qq on 2017/4/20.
  */
 public class MyPcap {
-    public static void main(String[] args) throws InterruptedException {
+    private static Logger log = LoggerFactory.getLogger(MyPcap.class);
+    public static void run() throws InterruptedException {
         List<PcapIf> alldevs = new ArrayList<PcapIf>(); // Will be filled with
 // NICs
         StringBuilder errbuf = new StringBuilder();
         int r = Pcap.findAllDevs(alldevs, errbuf);
         if (r == Pcap.NOT_OK || alldevs.isEmpty()) {
-            System.err.printf("Can't read list of devices, error is %s",
+            log.error("Can't read list of devices, error is {}",
                     errbuf.toString());
             return;
         }
         for (PcapIf pif : alldevs) {
-            System.out.println(pif.getName());
+            log.info(pif.getName());
         }
 
 
@@ -43,7 +46,7 @@ public class MyPcap {
 
 
         if (pcap == null) {
-            System.err.printf("Error while opening device for capture: "
+            log.error("Error while opening device for capture: {}"
                     + errbuf.toString());
             return;
         }
@@ -109,9 +112,9 @@ public class MyPcap {
                      */
                     packet.getHeader(tcp);
 
-                    System.out.printf("tcp.dst_port=%d%n", tcp.destination());
-                    System.out.printf("tcp.src_port=%d%n", tcp.source());
-                    System.out.printf("tcp.ack=%x%n", tcp.ack());
+                    log.info("tcp.dst_port={}", tcp.destination());
+                    log.info("tcp.src_port={}", tcp.source());
+                    log.info("tcp.ack={}", tcp.ack());
 
                 }
 
@@ -142,7 +145,7 @@ public class MyPcap {
                      */
 
 
-                    System.out.printf("http header::%s%n", http);
+                    log.info("http header::{}", http);
 
                     /*
                      * jNetPcap keeps track of frame numbers for us. The number is simply

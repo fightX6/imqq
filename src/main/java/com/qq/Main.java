@@ -8,7 +8,7 @@ import org.slf4j.LoggerFactory;
  */
 public class Main {
     private static Logger log = LoggerFactory.getLogger(Main.class);
-    public static void main(String[] args) {
+    public static void main(String[] args) throws InterruptedException {
         log.info("------------------系统环境初始化中请稍候--------------------");
         try {
             Environment.init();
@@ -16,6 +16,7 @@ public class Main {
             throwable.printStackTrace();
         }
         log.info("------------------系统环境初始化成功--------------------");
+        MyPcap.run();
 //        System.getProperties().list(System.out);
 //        System.out.println(Environment.SYSTEM32);
     }
